@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# Keep ACME validation reachable for automatic certificate renewals.
+RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/
+RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{HTTP_HOST} ^www\.xn--q1aa9a\.online$ [NC]
+RewriteRule ^ https://xn--q1aa9a.online%{REQUEST_URI} [R=301,L,NE]
+
+Options -Indexes
