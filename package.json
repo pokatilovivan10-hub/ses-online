@@ -1,0 +1,16 @@
+{
+  "name": "ses-moscow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Лендинг СЭС Москва с отправкой заявок в Telegram",
+  "main": "dist/boot.js",
+  "scripts": {
+    "dev": "node dist/boot.js",
+    "build": "node build.js",
+    "start": "node dist/boot.js --host 0.0.0.0 --port 3000",
+    "check": "node --check dist/boot.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
