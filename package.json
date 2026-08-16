@@ -5,6 +5,7 @@
   "description": "Лендинг СЭС Москва с отправкой заявок в Telegram",
   "main": "dist/boot.js",
   "scripts": {
+    "test": "node --test",
     "dev": "node dist/boot.js",
     "build": "node build.js",
     "start": "node dist/boot.js --host 0.0.0.0 --port 3000",

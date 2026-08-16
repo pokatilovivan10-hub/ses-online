@@ -6,8 +6,14 @@ const path = require('path');
 const ROOT = __dirname;
 const DIST = path.join(ROOT, 'dist');
 
+// Исходная статика хранится в корне, а runtime — в dist/.
+// Перед проверкой синхронизируем публикуемые HTML-файлы и доменное имя.
+for (const file of ['index.html', 'thanks.html', 'CNAME']) {
+  fs.copyFileSync(path.join(ROOT, file), path.join(DIST, file));
+}
+
 // dist должен существовать и содержать файлы сайта
-const required = ['boot.js', 'index.html', path.join('img', 'hero.jpg')];
+const required = ['boot.js', 'index.html', 'thanks.html', path.join('img', 'hero.jpg')];
 let ok = true;
 for (const f of required) {
   if (!fs.existsSync(path.join(DIST, f))) {
