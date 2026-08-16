@@ -6,4 +6,9 @@ RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC,OR]
 RewriteCond %{HTTP_HOST} ^www\.xn--q1aa9a\.online$ [NC]
 RewriteRule ^ https://xn--q1aa9a.online%{REQUEST_URI} [R=301,L,NE]
 
+# Friendly public endpoints. Kept after canonical redirects so HTTP/www
+# requests retain their original path before being served internally.
+RewriteRule ^thanks/?$ thanks.html [END]
+RewriteRule ^api/lead/?$ api/lead.php [END]
+
 Options -Indexes

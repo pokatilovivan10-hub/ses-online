@@ -3,6 +3,8 @@ FROM node:20-alpine
 WORKDIR /app
 
 COPY package.json build.js ./
+COPY index.html thanks.html CNAME .htaccess ./
+COPY api ./api
 COPY dist ./dist
 
 RUN npm run build

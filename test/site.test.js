@@ -25,6 +25,8 @@ test('online landing loads Gudok and redirects successful leads to thanks page',
   assert.match(source, /mod\.gudok\.tel\/script\.js\?sid=/);
   assert.match(source, /k9e3j6xpn5/);
   assert.match(source, /window\.location\.assign\('\/thanks'\)/);
+  assert.match(source, /fetch\('\/api\/lead',/);
+  assert.doesNotMatch(source, /fetch\('\/api\/lead\.php',/);
   assert.ok(fs.existsSync(path.join(root, 'thanks.html')), 'thanks page is missing');
 });
 
@@ -32,4 +34,19 @@ test('build produces synchronized public assets', () => {
   const dist = path.join(root, 'dist');
   assert.equal(fs.readFileSync(path.join(dist, 'index.html'), 'utf8'), source);
   assert.ok(fs.existsSync(path.join(dist, 'thanks.html')), 'built thanks page is missing');
+  assert.equal(fs.readFileSync(path.join(dist, 'api', 'lead.php'), 'utf8'), fs.readFileSync(path.join(root, 'api', 'lead.php'), 'utf8'));
+});
+
+test('Apache serves the thank-you page without bypassing canonical redirects', () => {
+  const rules = fs.readFileSync(path.join(root, '.htaccess'), 'utf8');
+  assert.match(rules, /RewriteRule \^thanks\/\?\$ thanks\.html \[END\]/);
+  assert.match(rules, /RewriteRule \^api\/lead\/\?\$ api\/lead\.php \[END\]/);
+  assert.ok(rules.indexOf('R=301') < rules.indexOf('^thanks/?$'), 'canonical redirect must run before internal thanks rewrite');
+  assert.equal(fs.readFileSync(path.join(root, 'dist', '.htaccess'), 'utf8'), rules);
+});
+
+test('Docker build includes the source files required by the asset sync step', () => {
+  const dockerfile = fs.readFileSync(path.join(root, 'Dockerfile'), 'utf8');
+  assert.match(dockerfile, /COPY index\.html thanks\.html CNAME \.htaccess \.\/\n/);
+  assert.match(dockerfile, /COPY api \.\/api/);
 });
