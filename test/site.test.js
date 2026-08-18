@@ -28,6 +28,23 @@ test('online landing loads Gudok and redirects successful leads to thanks page',
   assert.match(source, /fetch\('\/api\/lead',/);
   assert.doesNotMatch(source, /fetch\('\/api\/lead\.php',/);
   assert.ok(fs.existsSync(path.join(root, 'thanks.html')), 'thanks page is missing');
+  assert.match(source, /mc\.yandex\.ru\/metrika\/tag\.js\?id=111531771/);
+  assert.match(source, /ym\(111531771, 'init'/);
+  assert.match(source, /img\/specialist-v2\.jpg/);
+});
+
+test('online thank-you page includes the same Metrika counter', () => {
+  const thanks = fs.readFileSync(path.join(root, 'thanks.html'), 'utf8');
+  assert.match(thanks, /mc\.yandex\.ru\/metrika\/tag\.js\?id=111531771/);
+  assert.match(thanks, /ym\(111531771, 'init'/);
+  assert.match(thanks, /mc\.yandex\.ru\/watch\/111531771/);
+});
+
+test('replacement specialist image is present in source and build output', () => {
+  for (const image of ['img/specialist-v2.jpg', path.join('dist', 'img', 'specialist-v2.jpg')]) {
+    assert.ok(fs.existsSync(path.join(root, image)), `${image} is missing`);
+    assert.ok(fs.statSync(path.join(root, image)).size > 100000, `${image} is unexpectedly small`);
+  }
 });
 
 test('build produces synchronized public assets', () => {
