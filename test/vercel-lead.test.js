@@ -6,10 +6,11 @@ const test = require('node:test');
 
 const root = path.resolve(__dirname, '..');
 
-test('lead form posts directly to the selected email delivery service', () => {
+test('lead form posts to the same-origin secure lead endpoint', () => {
   const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-  assert.match(html, /fetch\('https:\/\/formsubmit\.co\/ajax\/professional-dez@yandex\.ru',/);
-  assert.match(html, /_subject: 'Новая заявка с сэс\.online'/);
+  assert.match(html, /fetch\('\/api\/lead',/);
+  assert.doesNotMatch(html, /formsubmit\.co\/ajax/);
+  assert.match(html, /if\(r\.ok && data && data\.ok === true\)/);
 });
 
 test('tracked source does not contain a Telegram bot token literal', () => {

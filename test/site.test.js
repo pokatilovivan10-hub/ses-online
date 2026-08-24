@@ -25,8 +25,8 @@ test('online landing loads Gudok and redirects successful leads to thanks page',
   assert.match(source, /mod\.gudok\.tel\/script\.js\?sid=/);
   assert.match(source, /k9e3j6xpn5/);
   assert.match(source, /window\.location\.assign\('\/thanks'\)/);
-  assert.match(source, /fetch\('https:\/\/formsubmit\.co\/ajax\/professional-dez@yandex\.ru',/);
-  assert.doesNotMatch(source, /fetch\('\/api\/lead\.php',/);
+  assert.match(source, /fetch\('\/api\/lead',/);
+  assert.doesNotMatch(source, /formsubmit\.co\/ajax/);
   assert.ok(fs.existsSync(path.join(root, 'thanks.html')), 'thanks page is missing');
   assert.match(source, /mc\.yandex\.ru\/metrika\/tag\.js\?id=111531771/);
   assert.match(source, /ym\(111531771, 'init'/);

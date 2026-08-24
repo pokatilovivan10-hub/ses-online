@@ -933,7 +933,7 @@ h1 .accent{color:#ff5a67}
     if(phone.value === '+7 (' || phone.value === '+7') phone.value = '';
   });
 
-  /* ---- Form validation & submit (заявка уходит на FormSubmit -> email) ---- */
+  /* ---- Form validation & submit (заявка уходит в серверный обработчик) ---- */
   var form = document.getElementById('leadForm');
   var success = document.getElementById('formSuccess');
   var submitBtn = form.querySelector('button[type="submit"]');
@@ -949,30 +949,25 @@ h1 .accent{color:#ff5a67}
     phone.classList.remove('error');
     submitBtn.disabled = true;
     submitBtn.textContent = 'Отправляем…';
-    fetch('https://formsubmit.co/ajax/professional-dez@yandex.ru', {
+    fetch('/api/lead', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         name: form.name.value,
         phone: phone.value,
-        address: form.address.value,
-        source: 'сэс.online',
-        _subject: 'Новая заявка с сэс.online'
+        address: form.address.value
       })
     })
     .then(function(r){
       return r.text().then(function(t){
         var data;
         try { data = JSON.parse(t); } catch(e) { data = null; }
-        return data;
+        if(r.ok && data && data.ok === true) return data;
+        throw new Error((data && data.error) || 'send failed');
       });
     })
-    .then(function(data){
-      if(data && (data.success === 'true' || data.success === true)){
-        window.location.assign('/thanks');
-      } else {
-        throw new Error((data && data.error) || 'send failed');
-      }
+    .then(function(){
+      window.location.assign('/thanks');
     })
     .catch(function(err){
       submitBtn.disabled = false;
