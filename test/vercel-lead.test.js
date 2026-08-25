@@ -27,3 +27,9 @@ test('tracked source does not contain a Telegram bot token literal', () => {
     );
   }
 });
+
+test('shared-hosting handler never reports success when Telegram is not configured', () => {
+  const php = fs.readFileSync(path.join(root, 'api', 'lead.php'), 'utf8');
+  assert.match(php, /if \(\$token === '' \|\| \$chatId === ''\) \{\s*error_log\('\[lead\] Telegram is not configured'\);\s*respond\(503, \['ok' => false,/s);
+  assert.doesNotMatch(php, /if \(\$token === '' \|\| \$chatId === ''\) \{\s*respond\(200, \['ok' => true\]\);/s);
+});

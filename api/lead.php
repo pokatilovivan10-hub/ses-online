@@ -61,7 +61,8 @@ $config = is_file($configPath) ? require $configPath : [];
 $token = (string)($config['telegram_bot_token'] ?? '');
 $chatId = (string)($config['telegram_chat_id'] ?? '');
 if ($token === '' || $chatId === '') {
-    respond(200, ['ok' => true]);
+    error_log('[lead] Telegram is not configured');
+    respond(503, ['ok' => false, 'error' => 'Приём заявок временно недоступен']);
 }
 
 $message = "🪳 <b>Новая заявка с сайта СЭС Москва</b>\n\n"
